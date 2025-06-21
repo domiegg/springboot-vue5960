@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lianbang.web.controller.system.mapper.DataMapper">
+
+    <resultMap type="Data" id="DataResult">
+        <result property="dataId"    column="dataId"    />
+        <result property="dataType"    column="dataType"    />
+        <result property="dataInfo"    column="dataInfo"    />
+        <result property="dataModel"    column="dataModel"    />
+        <result property="dataTime"    column="dataTime"    />
+        <result property="dataVar"    column="dataVar"    />
+        <result property="dataTimeEnd"    column="dataTimeEnd"    />
+    </resultMap>
+
+    <sql id="selectDataVo">
+        select dataId, dataType, dataInfo, dataModel, dataTime, dataVar,dataTimeEnd from a_data
+    </sql>
+
+    <select id="selectDataList" parameterType="Data" resultMap="DataResult">
+        <include refid="selectDataVo"/>
+        <where>
+            <if test="dataType != null  and dataType != ''"> and dataType = #{dataType}</if>
+            <if test="dataInfo != null  and dataInfo != ''"> and dataInfo = #{dataInfo}</if>
+            <if test="dataModel != null  and dataModel != ''"> and dataModel = #{dataModel}</if>
+            <if test="dataTime != null "> and dataTime = #{dataTime}</if>
+            <if test="dataVar != null  and dataVar != ''"> and dataVar = #{dataVar}</if>
+        </where>
+    </select>
+
+    <select id="selectDataByDataId" parameterType="Long" resultMap="DataResult">
+        <include refid="selectDataVo"/>
+        where dataId = #{dataId}
+    </select>
+
+    <insert id="insertData" parameterType="Data">
+        insert into a_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dataId != null">dataId,</if>
+            <if test="dataType != null">dataType,</if>
+            <if test="dataInfo != null">dataInfo,</if>
+            <if test="dataModel != null">dataModel,</if>
+            <if test="dataTime != null">dataTime,</if>
+            <if test="dataTimeEnd != null">dataTimeEnd,</if>
+            <if test="dataVar != null">dataVar,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dataId != null">#{dataId},</if>
+            <if test="dataType != null">#{dataType},</if>
+            <if test="dataInfo != null">#{dataInfo},</if>
+            <if test="dataModel != null">#{dataModel},</if>
+            <if test="dataTime != null">#{dataTime},</if>
+            <if test="dataTimeEnd != null">#{dataTimeEnd},</if>
+            <if test="dataVar != null">#{dataVar},</if>
+         </trim>
+    </insert>
+
+    <update id="updateData" parameterType="Data">
+        update a_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dataType != null">dataType = #{dataType},</if>
+            <if test="dataInfo != null">dataInfo = #{dataInfo},</if>
+            <if test="dataModel != null">dataModel = #{dataModel},</if>
+            <if test="dataTime != null">dataTime = #{dataTime},</if>
+            <if test="dataVar != null">dataVar = #{dataVar},</if>
+        </trim>
+        where dataId = #{dataId}
+    </update>
+
+    <delete id="deleteDataByDataId" parameterType="Long">
+        delete from a_data where dataId = #{dataId}
+    </delete>
+
+    <delete id="deleteDataByDataIds" parameterType="String">
+        delete from a_data where dataId in
+        <foreach item="dataId" collection="array" open="(" separator="," close=")">
+            #{dataId}
+        </foreach>
+    </delete>
+</mapper>
